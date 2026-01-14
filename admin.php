@@ -12,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 // DAFTAR HALAMAN YANG DIIZINKAN
-$allowed_pages = ['dashboard', 'article'];
+$allowed_pages = ['dashboard', 'article', 'gallery', 'profile']; // ⬅ tambah profile
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 // VALIDASI HALAMAN
@@ -69,6 +69,9 @@ if (!in_array($page, $allowed_pages)) {
         <li class="nav-item">
             <a class="nav-link" href="admin.php?page=article">Article</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="admin.php?page=gallery">Gallery</a>
+        </li>
 
         <!-- DROPDOWN USER -->
         <li class="nav-item dropdown">
@@ -81,11 +84,23 @@ if (!in_array($page, $allowed_pages)) {
           </a>
 
           <ul class="dropdown-menu dropdown-menu-end">
+
+            <!-- PROFILE -->
+            <li>
+              <a class="dropdown-item" href="admin.php?page=profile">
+                <i class="bi bi-person me-1"></i> Profile
+              </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <!-- LOGOUT -->
             <li>
               <a class="dropdown-item text-danger" href="logout.php">
                 <i class="bi bi-box-arrow-right me-1"></i> Logout
               </a>
             </li>
+
           </ul>
         </li>
 
@@ -102,7 +117,6 @@ if (!in_array($page, $allowed_pages)) {
     </h4>
 
     <?php
-    // Sertakan file sesuai halaman yang valid
     include($page . ".php");
     ?>
 </main>

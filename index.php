@@ -758,95 +758,39 @@ $article = $hasil->fetch_assoc();
 </section>
 
     <!-- GALERI SECTION -->
-    <section id="gallery">
-      <div class="container">
-        <h2 class="section-heading">Galeri Anime & Manga Jepang</h2>
-        <p class="text-center text-muted mb-5">Koleksi gambar anime dan manga favorit admin.</p>
+<section id="gallery">
+  <div class="container">
+    <h2 class="section-heading">Galeri Anime & Manga Jepang</h2>
+    <p class="text-center text-muted mb-5">
+      Koleksi gambar anime dan manga favorit admin.
+    </p>
 
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="one-piece-gear-5.jpg" alt="One Piece" />
-              <div class="gallery-caption">
-                <h5>One Piece</h5>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="seirei.jpg" alt="Seirei Gensouki" />
-              <div class="gallery-caption">
-                <h5>Seirei Gensouki: Spirit Chronicles</h5>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="Oguri Cap.jpg" alt="Uma Musume" />
-              <div class="gallery-caption">
-                <h5>Uma Musume: Cinderella Gray</h5>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="d8034868372b067cf7e90f35ce3cca9e.jpg" alt="Persona 3" />
-              <div class="gallery-caption">
-                <h5>Persona 3 The Movie</h5>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="demon slayer.jpg" alt="Demon Slayer" />
-              <div class="gallery-caption">
-                <h5>Demon Slayer</h5>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="jjk.jpg" alt="Jujutsu Kaisen" />
-              <div class="gallery-caption">
-                <h5>Jujutsu Kaisen</h5>
-              </div>
-            </div>
-          </div>
+    <div class="row g-4">
+      <?php
+      $sql = "SELECT * FROM gallery 
+              ORDER BY tanggal DESC 
+              LIMIT 9";
+      $hasil = $conn->query($sql);
 
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="death note.jpg" alt="Jujutsu Kaisen" />
-              <div class="gallery-caption">
-                <h5>Death Note</h5>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="summer pocket.jpg" alt="Jujutsu Kaisen" />
-              <div class="gallery-caption">
-                <h5>Summer Pocket</h5>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="gallery-item">
-              <img src="spy x family.jpg" alt="Jujutsu Kaisen" />
-              <div class="gallery-caption">
-                <h5>Spy X Family</h5>
-              </div>
+      while ($row = $hasil->fetch_assoc()):
+      ?>
+        <div class="col-md-4">
+          <div class="gallery-item">
+            <img 
+              src="<?= htmlspecialchars($row['gambar']); ?>" 
+              alt="<?= htmlspecialchars($row['deskripsi']); ?>" 
+            />
+            <div class="gallery-caption">
+              <h5><?= htmlspecialchars($row['deskripsi']); ?></h5>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      <?php endwhile; ?>
+    </div>
+
+  </div>
+</section>
+
 
     <!-- SCHEDULE SECTION - PERBAIKAN: bg-light diubah untuk tema gelap -->
     <section id="schedule" class="bg-light">

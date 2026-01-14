@@ -1,156 +1,131 @@
 <?php
-//memulai session
+// memulai session
 session_start();
 
-//menyertakan code dari file koneksi
+// menyertakan code dari file koneksi
 include "koneksi.php";
 
-//check jika sudah ada user yang login arahkan ke halaman admin
+// check jika sudah login
 if (isset($_SESSION['username'])) {
-  header("location:admin.php");
+    header("location:admin.php");
+    exit;
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login | My Daily Journal - Kuronaku</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-    />
-    <link rel="icon" href="img/logo.png" />
-  </head>
-  <body class="bg-danger-subtle">
 
-        <div class="container mt-5 pt-5">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" href="img/logo.png" />
+</head>
+
+<body class="bg-danger-subtle">
+
+<div class="container mt-5 pt-5">
     <div class="row">
         <div class="col-12 col-sm-8 col-md-6 m-auto">
             <div class="card border-0 shadow rounded-5">
                 <div class="card-body">
                     <div class="text-center mb-3">
-                <i class="bi bi-person-circle h1 display-4"></i>
-                <p>Kuronaku</p>
-                <hr />
-              </div>
-              <form action="" method="post" id="loginForm">
-                <input
-                  type="text"
-                  name="user"
-                  id="user"
-                  class="form-control my-4 py-2 rounded-4"
-                  placeholder="Username"
-                />
-                <input
-                  type="password"
-                  name="pass"
-                  id="pass"
-                  class="form-control my-4 py-2 rounded-4"
-                  placeholder="Password"
-                />
-                <div class="text-center my-3 d-grid">
-                  <button class="btn btn-danger rounded-4">Login</button>
-                </div>
-                <p id="errorMsg" class="text-danger"></p>
-              </form>
+                        <i class="bi bi-person-circle h1 display-4"></i>
+                        <p>Kuronaku</p>
+                        <hr />
+                    </div>
+
+                    <form action="" method="post" id="loginForm">
+                        <input type="text" name="user" id="user"
+                               class="form-control my-4 py-2 rounded-4"
+                               placeholder="Username">
+
+                        <input type="password" name="pass" id="pass"
+                               class="form-control my-4 py-2 rounded-4"
+                               placeholder="Password">
+
+                        <div class="text-center my-3 d-grid">
+                            <button class="btn btn-danger rounded-4" name="login">
+                                Login
+                            </button>
+                        </div>
+
+                        <p id="errorMsg" class="text-danger text-center">
+                            <?php
+                            /* ================= PROSES LOGIN ================= */
+                            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+                                $username = trim($_POST['user']);
+                                $password_input = trim($_POST['pass']);
+
+                                if ($username === "" || $password_input === "") {
+                                    echo "Username dan Password wajib diisi!";
+                                } else {
+
+                                    // Ambil data user berdasarkan username
+                                    $stmt = $conn->prepare(
+                                        "SELECT * FROM user WHERE username=?"
+                                    );
+                                    $stmt->bind_param("s", $username);
+                                    $stmt->execute();
+                                    $hasil = $stmt->get_result();
+
+                                    if ($hasil->num_rows === 1) {
+
+                                        $row = $hasil->fetch_assoc();
+
+                                        // 🔐 VERIFIKASI PASSWORD HASH
+                                        if (password_verify($password_input, $row['password'])) {
+
+                                            $_SESSION['username'] = $row['username'];
+                                            $_SESSION['foto']     = $row['foto'];
+
+                                            header("Location: admin.php");
+                                            exit;
+
+                                        } else {
+                                            echo "Password salah!";
+                                        }
+
+                                    } else {
+                                        echo "Username tidak ditemukan!";
+                                    }
+                                }
+                            }
+                            ?>
+                        </p>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-    <?php
 
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+    const errorMsg = document.getElementById("errorMsg");
 
-//check apakah ada request dengan method POST yang dilakukan
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    errorMsg.textContent = "";
 
-    // ambil nilai input
-    $userInput = isset($_POST['user']) ? trim($_POST['user']) : "";
-    $passInput = isset($_POST['pass']) ? trim($_POST['pass']) : "";
-
-    // --- VALIDASI EMPTY FIELD ---
-    if ($userInput === "") {
-        echo "Username tidak boleh kosong!";
-        exit; // hentikan proses
+    if (user === "") {
+        errorMsg.textContent = "Username tidak boleh kosong!";
+        event.preventDefault();
+        return;
     }
 
-    if ($passInput === "") {
-        echo "Password tidak boleh kosong!";
-        exit; // hentikan proses
+    if (pass === "") {
+        errorMsg.textContent = "Password tidak boleh kosong!";
+        event.preventDefault();
+        return;
     }
-
-		//jika lolos semua validasi 
-    $username = $userInput; 
-        $password = md5($passInput); //menggunakan fungsi enkripsi md5 supaya sama dengan password  yang tersimpan di database
-
-        //prepared statement
-        $stmt = $conn->prepare("SELECT * 
-                                FROM user 
-                                WHERE username=? AND password=?");
-
-        //parameter binding 
-        $stmt->bind_param("ss", $username, $password);//username string dan password string
-        
-        //database executes the statement
-        $stmt->execute();
-        
-        //menampung hasil eksekusi
-        $hasil = $stmt->get_result();
-        
-        //mengambil baris dari hasil sebagai array asosiatif
-        $row = $hasil->fetch_array(MYSQLI_ASSOC);
-
-    //check apakah ada baris hasil data user yang cocok
-    if (!empty($row)) { 
-            //jika data ada (berhasil), alihkan ke halaman admin
-            $_SESSION['username'] = $username;
-            header("location:admin.php");
-        } else {
-            //jika data tidak ada (gagal), tetap di halaman login
-            header("location:login.php");
-        }
-};
-?>
-
-    <script>
-  document.getElementById("loginForm").addEventListener("submit", function(event) {
-      const user = document.getElementById("user").value.trim();
-      const pass = document.getElementById("pass").value.trim();
-      const errorMsg = document.getElementById("errorMsg");
-
-      // Reset pesan error
-      errorMsg.textContent = "";
-
-      // Cek username kosong
-      if (user === "") {
-          errorMsg.textContent = "Username tidak boleh kosong!";
-          event.preventDefault(); // stop submit (stop kirim data dari form ke server)
-          return;
-      }
-
-      // Cek password kosong
-      if (pass === "") {
-          errorMsg.textContent = "Password tidak boleh kosong!";
-          event.preventDefault(); // stop submit (stop kirim data dari form ke server)
-          return;
-      }
-
-      // Jika lolos semua validasi, form akan submit (kirim data dari form ke server)
-  });
-  
+});
 </script>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>

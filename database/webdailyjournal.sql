@@ -15,35 +15,24 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
+-- Dumping database structure for webdailyjournal
+CREATE DATABASE IF NOT EXISTS `webdailyjournal` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `webdailyjournal`;
 
--- Dumping structure for table webdailyjournal.article
-CREATE TABLE IF NOT EXISTS `article` (
+-- Dumping structure for table webdailyjournal.gallery
+CREATE TABLE IF NOT EXISTS `gallery` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `judul` text CHARACTER SET latin1 COLLATE latin1_swedish_ci,
-  `isi` text CHARACTER SET latin1 COLLATE latin1_swedish_ci,
   `gambar` text CHARACTER SET latin1 COLLATE latin1_swedish_ci,
   `tanggal` datetime DEFAULT NULL,
   `username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Dumping data for table webdailyjournal.article: ~1 rows (approximately)
-INSERT INTO `article` (`id`, `judul`, `isi`, `gambar`, `tanggal`, `username`) VALUES
-	(5, 'Pencipta One Piece', 'Eiichiro Oda, mangaka legendaris pencipta One Piece. Karya nya sangat legendaris hingga sekarang', 'uploads/profil_eiichiro_oda.jpg', '2025-12-21 20:07:29', 'admin'),
-	(10, 'Elaina', 'Bukan kah ini my Bini??', 'uploads/20251231074857_598.jpg', '2025-12-31 07:48:57', 'admin');
-
--- Dumping structure for table webdailyjournal.user
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) DEFAULT NULL,
-  `password` text,
-  `foto` text,
+  `judul` text CHARACTER SET latin1 COLLATE latin1_swedish_ci,
+  `deskripsi` text CHARACTER SET latin1 COLLATE latin1_swedish_ci,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table webdailyjournal.user: ~0 rows (approximately)
-INSERT INTO `user` (`id`, `username`, `password`, `foto`) VALUES
-	(1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', NULL);
+-- Dumping data for table webdailyjournal.gallery: ~1 rows (approximately)
+INSERT INTO `gallery` (`id`, `gambar`, `tanggal`, `username`, `judul`, `deskripsi`) VALUES
+	(1, 'gallery/Pohon Sakura Asli.jpg', '2026-01-14 08:43:05', 'admin', 'pohon sakura jadi jadian', 'bagus sekali');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
