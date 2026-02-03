@@ -646,7 +646,7 @@ include "koneksi.php";
             
             <!-- Gambar mahasiswa -->
             <div class="col-md-4 text-center mt-4 mt-md-0">
-              <img src="KUMARA 4X6.jpg" alt="Foto Mahasiswa" class="img-fluid rounded shadow" style="max-width: 200px;">
+              <img src="img/KUMARA 4X6.jpg" alt="Foto Mahasiswa" class="img-fluid rounded shadow" style="max-width: 200px;">
             </div>
           </div>
         </div>
